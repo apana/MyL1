@@ -112,8 +112,8 @@ process.L1Algos.L1GtReadoutRecordTag = 'hltGtDigisPrescaled'
 process.L1Algos.L1GtObjectMapTag = 'hltGtDigisPrescaled'
 process.L1Algos.L1CollectionsTag = cms.InputTag("hltL1extraParticles")
 process.L1Algos.L1MuonCollectionTag = cms.InputTag("hltL1extraParticles")
-## process.L1Algos.L1SeedsLogicalExpression = "L1_DummyBit"
-process.L1Algos.L1SeedsLogicalExpression = "L1_DoubleEG_15_10 OR L1_SingleEG35 OR L1_SingleIsoEG25er OR L1_DoubleTauJet36er OR L1_DoubleMu_10_0_HighQ_WdEta18 OR L1_ZeroBias OR L1_SingleJetC32_NotBptxOR OR L1_ETM60 OR L1_SingleMu16er OR L1_SingleEG35er OR L1_IsoEG20er_TauJet20er OR L1_SingleIsoEG30er OR L1_DoubleTauJet68er OR L1_Mu5_EG20 OR L1_HTT150 OR L1_SingleEG20 OR L1_SingleJetC20_NotBptxOR OR L1_DoubleMu0_Eta1p6_HighQ_WdEta18_OS OR L1_SingleMu20er OR L1_TripleEG_14_10_8 OR L1_Mu20_EG10 OR L1_DoubleMu_10_3p5 OR L1_ETM70 OR L1_SingleMu16 OR L1_Mu5_IsoEG18 OR L1_Mu16er_TauJet20er OR L1_SingleMu6_NotBptxOR OR L1_SingleJet176"
+process.L1Algos.L1SeedsLogicalExpression = "L1_DummyBit"
+
 ### Trigger report ################################################################
 
 process.load("L1Trigger.GlobalTriggerAnalyzer.l1GtTrigReport_cfi")
