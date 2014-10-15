@@ -1,12 +1,11 @@
 import FWCore.ParameterSet.Config as cms
 
-
 overRideL1=True  # override the L1 menu
-## overRideL1=False  # override the L1 menu
-isMC = False
+isMC = True
+GLOBALTAG = 'PRE_LS172_V11::All'
+
 
 process = cms.Process("L1BitToName")
-
 
 ### Input source ###################################################
 
@@ -28,12 +27,6 @@ process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
 
 process.GlobalTag.connect   = 'frontier://FrontierProd/CMS_COND_31X_GLOBALTAG'
 process.GlobalTag.pfnPrefix = cms.untracked.string('frontier://FrontierProd/')
-from Configuration.AlCa.autoCond import autoCond
-process.GlobalTag.globaltag = autoCond['hltonline']
-if isMC:
-    process.GlobalTag.globaltag = autoCond['startup']
-
-GLOBALTAG = 'PRE_LS172_V11::All'
 process.GlobalTag.globaltag = GLOBALTAG
 
 if overRideL1:

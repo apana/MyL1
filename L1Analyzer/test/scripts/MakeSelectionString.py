@@ -53,7 +53,7 @@ def getL1AlgoBits(file):
     for x in seeds:
         d[x] = x
     newseeds = d.values()
-    print "Number of used L1 Algorithm bits: ", len(newseeds)
+    print "## Number of used L1 Algorithm bits in HLT menu: ", len(newseeds)
     return newseeds
 
 
