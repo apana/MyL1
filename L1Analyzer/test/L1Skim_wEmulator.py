@@ -12,8 +12,9 @@ OutputFile= "L1AlgoSkim.root"
 ## GLOBALTAG = 'PRE_LS172_V11::All'
 ## inputfile="root://cms-xrd-global.cern.ch//store/relval/CMSSW_7_2_0_pre8/RelValTTbar_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU25ns_PRE_LS172_V15-v1/00000/128408A7-F74F-E411-99FB-002618943854.root"
 
-GLOBALTAG = 'MCRUN2_72_V1A::All'
-inputfile="root://xrootd.ba.infn.it//store/mc/Fall13dr/QCD_Pt-50to80_Tune4C_13TeV_pythia8/GEN-SIM-RAW/castor_tsg_PU40bx25_POSTLS162_V2-v1/20000/FE742333-E480-E311-B65F-20CF305B055B.root"
+GLOBALTAG = 'PHYS14_25_V3'
+inputfile=["root://xrootd.ba.infn.it//store/mc/Phys14DR/Neutrino_Pt-2to20_gun/GEN-SIM-RAW/AVE20BX25_tsg_PHYS14_25_V3-v1/00000/00128B2A-C88E-E411-AFB9-0025905A48D6.root","root://xrootd.ba.infn.it//store/mc/Phys14DR/Neutrino_Pt-2to20_gun/GEN-SIM-RAW/AVE20BX25_tsg_PHYS14_25_V3-v1/00000/0012B7B5-DE8E-E411-99B1-003048FF9AC6.root"]
+#inputfile="root://xrootd.ba.infn.it//store/mc/Fall13dr/QCD_Pt-50to80_Tune4C_13TeV_pythia8/GEN-SIM-RAW/castor_tsg_PU40bx25_POSTLS162_V2-v1/20000/FE742333-E480-E311-B65F-20CF305B055B.root"
 
 ## rawDataLabel="source"  ## DATA
 rawDataLabel="rawDataCollector"  ## MC
@@ -23,9 +24,9 @@ rawDataLabel="rawDataCollector"  ## MC
 process.load('Configuration/StandardSequences/Services_cff')
 process.load('Configuration/StandardSequences/GeometryIdeal_cff')
 process.load('Configuration/StandardSequences/MagneticField_38T_cff')
-process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
+process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_condDBv2_cff')
 
-process.GlobalTag.connect   = 'frontier://FrontierProd/CMS_COND_31X_GLOBALTAG'
+process.GlobalTag.connect   = 'frontier://FrontierProd/CMS_CONDITIONS'
 process.GlobalTag.pfnPrefix = cms.untracked.string('frontier://FrontierProd/')
 process.GlobalTag.globaltag = GLOBALTAG
 
@@ -52,7 +53,7 @@ process.maxEvents = cms.untracked.PSet(
 
 if overRideL1:
     luminosityDirectory = "startup"
-    useXmlFile = 'L1Menu_Collisions2015_25ns_v1_L1T_Scales_20101224_Imp0_0x102f.xml'
+    useXmlFile = 'L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml'
 
     process.load('L1TriggerConfig.L1GtConfigProducers.l1GtTriggerMenuXml_cfi')
     process.l1GtTriggerMenuXml.TriggerMenuLuminosity = luminosityDirectory
@@ -65,6 +66,16 @@ if overRideL1:
 
 process.load("L1TriggerConfig.L1GtConfigProducers.L1GtPrescaleFactorsAlgoTrigConfig_cff")
 process.es_prefer_l1GtPrescaleFactorsAlgoTrig = cms.ESPrefer("L1GtPrescaleFactorsAlgoTrigTrivialProducer","l1GtPrescaleFactorsAlgoTrig")
+
+process.load("L1TriggerConfig.L1GtConfigProducers.L1GtTriggerMaskAlgoTrigConfig_cff")
+process.es_prefer_l1GtTriggerMaskAlgoTrig = cms.ESPrefer("L1GtTriggerMaskAlgoTrigTrivialProducer","l1GtTriggerMaskAlgoTrig")
+
+process.load("L1TriggerConfig.L1GtConfigProducers.L1GtTriggerMaskTechTrigConfig_cff")
+process.es_prefer_l1GtTriggerMaskTechTrig = cms.ESPrefer("L1GtTriggerMaskTechTrigTrivialProducer","l1GtTriggerMaskTechTrig")
+
+process.load("L1TriggerConfig.L1GtConfigProducers.L1GtPrescaleFactorsTechTrigConfig_cff")
+process.es_prefer_l1GtPrescaleFactorsTechTrig = cms.ESPrefer("L1GtPrescaleFactorsTechTrigTrivialProducer","l1GtPrescaleFactorsTechTrig")
+
 
 ####################################################################
 
@@ -97,7 +108,7 @@ process.reRunHCALTP=cms.Path(process.L1TRerunHCALTP_FromRAW)
 import L1Trigger.GlobalTrigger.gtDigis_cfi
 process.gtDigisFromSkim = L1Trigger.GlobalTrigger.gtDigis_cfi.gtDigis.clone()
 process.gtDigisFromSkim.GmtInputTag = 'simGmtDigis'
-process.gtDigisFromSkim.GctInputTag = 'caloStage1LegacyFormatDigis'
+process.gtDigisFromSkim.GctInputTag = 'simCaloStage1LegacyFormatDigis'
 process.gtDigisFromSkim.TechnicalTriggersInputTags = cms.VInputTag(cms.InputTag('simBscDigis'), 
                                                        cms.InputTag('simRpcTechTrigDigis'))
 
@@ -105,17 +116,17 @@ process.gtDigisFromSkim.TechnicalTriggersInputTags = cms.VInputTag(cms.InputTag(
 import L1Trigger.L1ExtraFromDigis.l1extraParticles_cfi
 process.l1extraParticlesFromSkim = L1Trigger.L1ExtraFromDigis.l1extraParticles_cfi.l1extraParticles.clone()
 process.l1extraParticlesFromSkim.muonSource = cms.InputTag( "simGmtDigis" )
-process.l1extraParticlesFromSkim.isolatedEmSource = cms.InputTag( 'caloStage1LegacyFormatDigis','isoEm' )
-process.l1extraParticlesFromSkim.nonIsolatedEmSource = cms.InputTag( 'caloStage1LegacyFormatDigis','nonIsoEm' )
-process.l1extraParticlesFromSkim.centralJetSource = cms.InputTag( 'caloStage1LegacyFormatDigis','cenJets' )
-process.l1extraParticlesFromSkim.forwardJetSource = cms.InputTag( 'caloStage1LegacyFormatDigis','forJets' )
-process.l1extraParticlesFromSkim.tauJetSource = cms.InputTag( 'caloStage1LegacyFormatDigis','tauJets' )
-process.l1extraParticlesFromSkim.etTotalSource = cms.InputTag( "caloStage1LegacyFormatDigis" )
-process.l1extraParticlesFromSkim.etHadSource = cms.InputTag( "caloStage1LegacyFormatDigis" )
-process.l1extraParticlesFromSkim.etMissSource = cms.InputTag( "caloStage1LegacyFormatDigis" )
-process.l1extraParticlesFromSkim.htMissSource = cms.InputTag( "caloStage1LegacyFormatDigis" )
-process.l1extraParticlesFromSkim.hfRingEtSumsSource = cms.InputTag( "caloStage1LegacyFormatDigis" )
-process.l1extraParticlesFromSkim.hfRingBitCountsSource = cms.InputTag( "caloStage1LegacyFormatDigis" ) 
+process.l1extraParticlesFromSkim.isolatedEmSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','isoEm' )
+process.l1extraParticlesFromSkim.nonIsolatedEmSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','nonIsoEm' )
+process.l1extraParticlesFromSkim.centralJetSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','cenJets' )
+process.l1extraParticlesFromSkim.forwardJetSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','forJets' )
+process.l1extraParticlesFromSkim.tauJetSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','tauJets' )
+process.l1extraParticlesFromSkim.etTotalSource = cms.InputTag( "simCaloStage1LegacyFormatDigis" )
+process.l1extraParticlesFromSkim.etHadSource = cms.InputTag( "simCaloStage1LegacyFormatDigis" )
+process.l1extraParticlesFromSkim.etMissSource = cms.InputTag( "simCaloStage1LegacyFormatDigis" )
+process.l1extraParticlesFromSkim.htMissSource = cms.InputTag( "simCaloStage1LegacyFormatDigis" )
+process.l1extraParticlesFromSkim.hfRingEtSumsSource = cms.InputTag( "simCaloStage1LegacyFormatDigis" )
+process.l1extraParticlesFromSkim.hfRingBitCountsSource = cms.InputTag( "simCaloStage1LegacyFormatDigis" ) 
 
 
 ####################################################################
@@ -126,8 +137,8 @@ process.L1Algos.L1GtReadoutRecordTag = 'gtDigisFromSkim'
 process.L1Algos.L1GtObjectMapTag = 'gtDigisFromSkim'
 process.L1Algos.L1CollectionsTag = cms.InputTag("l1extraParticlesFromSkim")
 process.L1Algos.L1MuonCollectionTag = cms.InputTag("l1extraParticlesFromSkim")
-## process.L1Algos.L1SeedsLogicalExpression = "L1_DummyBit"
-process.L1Algos.L1SeedsLogicalExpression = "L1_DoubleEG_15_10 OR L1_SingleEG35 OR L1_SingleIsoEG25er OR L1_DoubleTauJet36er OR L1_DoubleMu_10_0_HighQ_WdEta18 OR L1_ZeroBias OR L1_SingleJetC32_NotBptxOR OR L1_ETM60 OR L1_SingleMu16er OR L1_SingleEG35er OR L1_IsoEG20er_TauJet20er OR L1_SingleIsoEG30er OR L1_DoubleTauJet68er OR L1_Mu5_EG20 OR L1_HTT150 OR L1_SingleEG20 OR L1_SingleJetC20_NotBptxOR OR L1_DoubleMu0_Eta1p6_HighQ_WdEta18_OS OR L1_SingleMu20er OR L1_TripleEG_14_10_8 OR L1_Mu20_EG10 OR L1_DoubleMu_10_3p5 OR L1_ETM70 OR L1_SingleMu16 OR L1_Mu5_IsoEG18 OR L1_Mu16er_TauJet20er OR L1_SingleMu6_NotBptxOR OR L1_SingleJet176"
+process.L1Algos.L1SeedsLogicalExpression = "L1GlobalDecision"   ## OR of all L1 bits
+#process.L1Algos.L1SeedsLogicalExpression = "L1_DoubleEG_15_10 OR L1_SingleEG35 OR L1_SingleIsoEG25er OR L1_DoubleTauJet36er OR L1_DoubleMu_10_0_HighQ_WdEta18 OR L1_ZeroBias OR L1_SingleJetC32_NotBptxOR OR L1_ETM60 OR L1_SingleMu16er OR L1_SingleEG35er OR L1_IsoEG20er_TauJet20er OR L1_SingleIsoEG30er OR L1_DoubleTauJet68er OR L1_Mu5_EG20 OR L1_HTT150 OR L1_SingleEG20 OR L1_SingleJetC20_NotBptxOR OR L1_DoubleMu0_Eta1p6_HighQ_WdEta18_OS OR L1_SingleMu20er OR L1_TripleEG_14_10_8 OR L1_Mu20_EG10 OR L1_DoubleMu_10_3p5 OR L1_ETM70 OR L1_SingleMu16 OR L1_Mu5_IsoEG18 OR L1_Mu16er_TauJet20er OR L1_SingleMu6_NotBptxOR OR L1_SingleJet176"
 
 ### Trigger report ################################################################
 
@@ -147,9 +158,11 @@ process.out = cms.OutputModule("PoolOutputModule",
                                            'drop *_*_*_L1SKIM',
                                            'keep *_rawDataCollector_*_HLT',
                                            'keep *_l1extraParticlesFromSkim_*_*',
-                                           'keep *_caloStage1LegacyFormatDigis_*_*',
+                                           'keep *_simCaloStage1LegacyFormatDigis_*_*',
                                            'keep L1MuGMTReadoutCollection_simGmtDigis__L1SKIM',
-                                           'keep *_gtDigisFromSkim_*_*'
+                                           'keep *_gtDigisFromSkim_*_*',
+                                           'keep *_simMuonCSCDigis_*_*',
+                                           'keep *_*_MuonCSCHits_*',
                                            ),                               
     SelectEvents = cms.untracked.PSet(  SelectEvents = cms.vstring( 'skimL1Algos' ) ),
     fileName = cms.untracked.string(OutputFile)
@@ -167,3 +180,13 @@ process.schedule = cms.Schedule( process.raw2digi_step,
                                  process.o
                                  )
                     
+if 'GlobalTag' in process.__dict__:
+    from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag as customiseGlobalTag
+    process.GlobalTag = customiseGlobalTag(process.GlobalTag, globaltag = 'auto:run2_mc_GRun')
+    process.GlobalTag.connect   = 'frontier://FrontierProd/CMS_CONDITIONS'
+    process.GlobalTag.pfnPrefix = cms.untracked.string('frontier://FrontierProd/')
+    for pset in process.GlobalTag.toGet.value():
+        pset.connect = pset.connect.value().replace('frontier://FrontierProd/', 'frontier://FrontierProd/')
+    # fix for multi-run processing
+    process.GlobalTag.RefreshEachRun = cms.untracked.bool( False )
+    process.GlobalTag.ReconnectEachRun = cms.untracked.bool( False )
