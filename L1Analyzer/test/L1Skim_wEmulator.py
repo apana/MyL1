@@ -104,6 +104,9 @@ process.simRctDigis.hcalDigis = cms.VInputTag( cms.InputTag( 'simHcalTriggerPrim
 process.load("L1Trigger.L1TCalorimeter.L1TRerunHCALTP_FromRaw_cff")
 process.reRunHCALTP=cms.Path(process.L1TRerunHCALTP_FromRAW)
 
+### CCLA include latest RCT calibrations from UCT
+process.load("L1Trigger.L1TCalorimeter.caloStage1RCTLuts_cff")
+
 ### Global Trigger Emulator
 import L1Trigger.GlobalTrigger.gtDigis_cfi
 process.gtDigisFromSkim = L1Trigger.GlobalTrigger.gtDigis_cfi.gtDigis.clone()
