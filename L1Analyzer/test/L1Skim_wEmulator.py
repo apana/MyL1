@@ -121,6 +121,7 @@ process.l1extraParticlesFromSkim.nonIsolatedEmSource = cms.InputTag( 'simCaloSta
 process.l1extraParticlesFromSkim.centralJetSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','cenJets' )
 process.l1extraParticlesFromSkim.forwardJetSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','forJets' )
 process.l1extraParticlesFromSkim.tauJetSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','tauJets' )
+process.l1extraParticlesFromSkim.isoTauJetSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','isoTauJets' )
 process.l1extraParticlesFromSkim.etTotalSource = cms.InputTag( "simCaloStage1LegacyFormatDigis" )
 process.l1extraParticlesFromSkim.etHadSource = cms.InputTag( "simCaloStage1LegacyFormatDigis" )
 process.l1extraParticlesFromSkim.etMissSource = cms.InputTag( "simCaloStage1LegacyFormatDigis" )
