@@ -7,7 +7,7 @@ process= cms.Process('L1SKIM')
 nevts=-100
 overRideL1=True  # override the L1 menu
 
-OutputFile= "L1AlgoSkim_chgLUTS.root"
+OutputFile= "L1AlgoSkim.root"
 
 ## GLOBALTAG = 'PRE_LS172_V11::All'
 ## inputfile="root://cms-xrd-global.cern.ch//store/relval/CMSSW_7_2_0_pre8/RelValTTbar_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU25ns_PRE_LS172_V15-v1/00000/128408A7-F74F-E411-99FB-002618943854.root"
@@ -119,7 +119,6 @@ process.dttfDigis = cms.EDProducer("DTTFFEDReader",
     DTTF_FED_Source = cms.InputTag("rawDataCollector")
 )
 process.simDttfDigis.DTDigi_Source = cms.InputTag("dttfDigis")
-## process.simRpcTriggerDigis.label   = cms.string('rpcTriggerReEmulDigis')
 
 ### Global Trigger Emulator
 import L1Trigger.GlobalTrigger.gtDigis_cfi
