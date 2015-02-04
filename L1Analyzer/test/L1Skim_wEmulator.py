@@ -4,18 +4,18 @@ process= cms.Process('L1SKIM')
 
 ######## User options ############################################## 
 
-nevts=100
+nevts=-100
 overRideL1=True  # override the L1 menu
 
-OutputFile= "L1AlgoSkim.root"
+OutputFile= "L1AlgoSkim_chgLUTS.root"
 
 ## GLOBALTAG = 'PRE_LS172_V11::All'
 ## inputfile="root://cms-xrd-global.cern.ch//store/relval/CMSSW_7_2_0_pre8/RelValTTbar_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU25ns_PRE_LS172_V15-v1/00000/128408A7-F74F-E411-99FB-002618943854.root"
 
 GLOBALTAG = 'PHYS14_25_V3'
-inputfile=["root://xrootd.ba.infn.it//store/mc/Phys14DR/Neutrino_Pt-2to20_gun/GEN-SIM-RAW/AVE20BX25_tsg_PHYS14_25_V3-v1/00000/00128B2A-C88E-E411-AFB9-0025905A48D6.root","root://xrootd.ba.infn.it//store/mc/Phys14DR/Neutrino_Pt-2to20_gun/GEN-SIM-RAW/AVE20BX25_tsg_PHYS14_25_V3-v1/00000/0012B7B5-DE8E-E411-99B1-003048FF9AC6.root"]
+## inputfile=["root://xrootd.ba.infn.it//store/mc/Phys14DR/Neutrino_Pt-2to20_gun/GEN-SIM-RAW/AVE20BX25_tsg_PHYS14_25_V3-v1/00000/00128B2A-C88E-E411-AFB9-0025905A48D6.root","root://xrootd.ba.infn.it//store/mc/Phys14DR/Neutrino_Pt-2to20_gun/GEN-SIM-RAW/AVE20BX25_tsg_PHYS14_25_V3-v1/00000/0012B7B5-DE8E-E411-99B1-003048FF9AC6.root"]
 #inputfile="root://xrootd.ba.infn.it//store/mc/Fall13dr/QCD_Pt-50to80_Tune4C_13TeV_pythia8/GEN-SIM-RAW/castor_tsg_PU40bx25_POSTLS162_V2-v1/20000/FE742333-E480-E311-B65F-20CF305B055B.root"
-
+inputfile=["/store/mc/Phys14DR/QCD_Pt-1000to1400_Tune4C_13TeV_pythia8/GEN-SIM-RAW/AVE20BX25_tsg_castor_PHYS14_25_V3-v1/30000/564C06AC-E18D-E411-BB24-003048FFCB8C.root"]
 ## rawDataLabel="source"  ## DATA
 rawDataLabel="rawDataCollector"  ## MC
 
@@ -36,7 +36,7 @@ process.options = cms.untracked.PSet(
     )
 
 process.load('FWCore/MessageService/MessageLogger_cfi')
-process.MessageLogger.cerr.FwkReport.reportEvery = 100
+process.MessageLogger.cerr.FwkReport.reportEvery = 1
 process.MessageLogger.categories.append('L1GtTrigReport')
 
 ### Input source ###################################################
@@ -84,17 +84,23 @@ process.es_prefer_l1GtPrescaleFactorsTechTrig = cms.ESPrefer("L1GtPrescaleFactor
 # run GMT,Stage1, and GT Emulator
 ###
 
+process.load('Configuration/StandardSequences/Services_cff')
 process.load('Configuration/StandardSequences/SimL1Emulator_cff')
 process.load('Configuration.StandardSequences.RawToDigi_Data_cff')
 process.load('Configuration/StandardSequences/DigiToRaw_cff')
+process.load('Configuration.StandardSequences.Reconstruction_cff')
 
-process.raw2digi_step= cms.Path(process.RawToDigi)
+process.raw2digi_step= cms.Path(process.RawToDigi+process.dttfDigis)
 process.digi2raw_step = cms.Path(process.DigiToRaw)
 process.L1simulation_step = cms.Path(process.SimL1Emulator)
 
-
 from L1Trigger.L1TCommon.customsPostLS1 import customiseSimL1EmulatorForPostLS1
 process=customiseSimL1EmulatorForPostLS1(process)
+
+## 
+from L1Trigger.L1TCalorimeter.L1TCaloStage1_customForHLT import customiseL1EmulatorFromRaw
+##import L1Trigger.L1TCalorimeter.L1TCaloStage1_customForHLT
+process=customiseL1EmulatorFromRaw(process)
 
 #####  Redo RCT Digis
 process.simRctDigis.ecalDigis = cms.VInputTag( cms.InputTag( 'ecalDigis:EcalTriggerPrimitives' ) )
@@ -103,6 +109,17 @@ process.simRctDigis.hcalDigis = cms.VInputTag( cms.InputTag( 'simHcalTriggerPrim
 # HCAL TP hack
 process.load("L1Trigger.L1TCalorimeter.L1TRerunHCALTP_FromRaw_cff")
 process.reRunHCALTP=cms.Path(process.L1TRerunHCALTP_FromRAW)
+
+### CCLA include latest RCT calibrations from UCT
+process.load("L1Trigger.L1TCalorimeter.caloStage1RCTLuts_cff")
+## from L1Trigger.L1TCalorimeter.caloStage1RCTLuts_cff import *
+
+process.dttfDigis = cms.EDProducer("DTTFFEDReader",
+    verbose = cms.untracked.bool(False),
+    DTTF_FED_Source = cms.InputTag("rawDataCollector")
+)
+process.simDttfDigis.DTDigi_Source = cms.InputTag("dttfDigis")
+## process.simRpcTriggerDigis.label   = cms.string('rpcTriggerReEmulDigis')
 
 ### Global Trigger Emulator
 import L1Trigger.GlobalTrigger.gtDigis_cfi
@@ -121,6 +138,7 @@ process.l1extraParticlesFromSkim.nonIsolatedEmSource = cms.InputTag( 'simCaloSta
 process.l1extraParticlesFromSkim.centralJetSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','cenJets' )
 process.l1extraParticlesFromSkim.forwardJetSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','forJets' )
 process.l1extraParticlesFromSkim.tauJetSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','tauJets' )
+process.l1extraParticlesFromSkim.isoTauJetSource = cms.InputTag( 'simCaloStage1LegacyFormatDigis','isoTauJets' )
 process.l1extraParticlesFromSkim.etTotalSource = cms.InputTag( "simCaloStage1LegacyFormatDigis" )
 process.l1extraParticlesFromSkim.etHadSource = cms.InputTag( "simCaloStage1LegacyFormatDigis" )
 process.l1extraParticlesFromSkim.etMissSource = cms.InputTag( "simCaloStage1LegacyFormatDigis" )
@@ -137,7 +155,7 @@ process.L1Algos.L1GtReadoutRecordTag = 'gtDigisFromSkim'
 process.L1Algos.L1GtObjectMapTag = 'gtDigisFromSkim'
 process.L1Algos.L1CollectionsTag = cms.InputTag("l1extraParticlesFromSkim")
 process.L1Algos.L1MuonCollectionTag = cms.InputTag("l1extraParticlesFromSkim")
-process.L1Algos.L1SeedsLogicalExpression = "L1GlobalDecision"   ## OR of all L1 bits
+process.L1Algos.L1SeedsLogicalExpression = "L1GlobalDecision"
 #process.L1Algos.L1SeedsLogicalExpression = "L1_DoubleEG_15_10 OR L1_SingleEG35 OR L1_SingleIsoEG25er OR L1_DoubleTauJet36er OR L1_DoubleMu_10_0_HighQ_WdEta18 OR L1_ZeroBias OR L1_SingleJetC32_NotBptxOR OR L1_ETM60 OR L1_SingleMu16er OR L1_SingleEG35er OR L1_IsoEG20er_TauJet20er OR L1_SingleIsoEG30er OR L1_DoubleTauJet68er OR L1_Mu5_EG20 OR L1_HTT150 OR L1_SingleEG20 OR L1_SingleJetC20_NotBptxOR OR L1_DoubleMu0_Eta1p6_HighQ_WdEta18_OS OR L1_SingleMu20er OR L1_TripleEG_14_10_8 OR L1_Mu20_EG10 OR L1_DoubleMu_10_3p5 OR L1_ETM70 OR L1_SingleMu16 OR L1_Mu5_IsoEG18 OR L1_Mu16er_TauJet20er OR L1_SingleMu6_NotBptxOR OR L1_SingleJet176"
 
 ### Trigger report ################################################################
