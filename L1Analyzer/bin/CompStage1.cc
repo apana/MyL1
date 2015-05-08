@@ -244,7 +244,7 @@ algoBitToName_t FillAlgoToBitMap(const std::string& infile){
 
   algoBitToName_t l1Map;
 
-  ifstream ifile;
+  std::ifstream ifile;
   string line;
   ifile.open (infile.c_str());
   if (ifile.is_open())
