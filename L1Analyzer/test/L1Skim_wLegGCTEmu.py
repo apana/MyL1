@@ -78,11 +78,11 @@ process.L1GctConfigProducers.JetFinderForwardJetSeed = 10.0
 process.es_prefer_gct = cms.ESPrefer("L1GctConfigProducers")
 
 
-## #Unpack original GT
-## import EventFilter.L1GlobalTriggerRawToDigi.l1GtUnpack_cfi
-## process.hltGtDigis = EventFilter.L1GlobalTriggerRawToDigi.l1GtUnpack_cfi.l1GtUnpack.clone()
-## process.hltGtDigis.DaqGtInputTag = rawDataLabel
-## process.hltGtDigis.UnpackBxInEvent = 5
+#Unpack original GT
+import EventFilter.L1GlobalTriggerRawToDigi.l1GtUnpack_cfi
+process.hltGtDigis = EventFilter.L1GlobalTriggerRawToDigi.l1GtUnpack_cfi.l1GtUnpack.clone()
+process.hltGtDigis.DaqGtInputTag = rawDataLabel
+process.hltGtDigis.UnpackBxInEvent = 5
  
 
 gctDigis="simGctDigis";
@@ -113,7 +113,7 @@ process.l1extraParticlesFromSkim.hfRingBitCountsSource = cms.InputTag( gctDigis 
 process.HLTL1UnpackerSequence = cms.Sequence( process.RawToDigi 
                                                                                                + process.simEcalTriggerPrimitiveDigis+process.simHcalTriggerPrimitiveDigis 
                                                                                                + process.simRctDigis + process.simGctDigis 
-                                                                                               # + process.hltGtDigis 
+                                                                                               + process.hltGtDigis 
                                                                                                + process.gtDigisFromSkim + process.l1extraParticlesFromSkim )
 
 
