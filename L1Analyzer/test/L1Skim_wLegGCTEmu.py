@@ -145,6 +145,7 @@ process.out = cms.OutputModule("PoolOutputModule",
                                            'drop *_*_*_L1SKIM',
                                            'keep *_l1extraParticlesFromSkim_*_*',
                                            'keep *_gtDigisFromSkim_*_*',
+                                           'keep *_simGctDigis_*_L1SKIM',
                                            # 'keep *_hltGtDigis_*_*',
                                            # 'keep *_TriggerResults_*_*',
                                            'keep *_rawDataCollector_*_HLT'
