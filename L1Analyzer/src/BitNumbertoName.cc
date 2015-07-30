@@ -4,9 +4,14 @@
 #include "CondFormats/L1TObjects/interface/L1GtTriggerMenu.h"
 #include "CondFormats/DataRecord/interface/L1GtTriggerMenuRcd.h"
 
+static const bool useL1EventSetup(true);
+static const bool useL1GtTriggerMenuLite(false);
+
 // Get the algorithm of the jet collections we will read from the .cfg file
 // which defines the value of the strings CaloJetAlgorithm and GenJetAlgorithm.
-BitNumbertoName::BitNumbertoName( const ParameterSet & cfg ) {
+BitNumbertoName::BitNumbertoName( const ParameterSet & cfg ) :
+  m_l1GtUtils(cfg, consumesCollector(), useL1GtTriggerMenuLite, *this)
+{
   cout << " Beginning Analysis " << endl;
   outFile        = cfg.getParameter<string>( "BitsAndPrescales" );
   initL1=false;
@@ -18,9 +23,6 @@ void BitNumbertoName::beginJob() {
 }
 
 void BitNumbertoName::beginRun( const Run& iRun, const EventSetup& evSetup ) {
-
-  bool useL1EventSetup = true;
-  bool useL1GtTriggerMenuLite = false;
 
   // m_l1GtUtils.retrieveL1EventSetup(evSetup);
   m_l1GtUtils.getL1GtRunCache(iRun, evSetup, useL1EventSetup,

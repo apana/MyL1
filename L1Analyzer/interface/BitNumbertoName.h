@@ -1,6 +1,6 @@
-#ifndef MyL1_L1Analyzer_L1JetPlots_h
-#define MyL1_L1Analyzer_L1JetPlots_h
-/* \class L1JetPlots
+#ifndef MyL1_L1Analyzer_L1Bits_h
+#define MyL1_L1Analyzer_L1Bits_h
+/* \class BitNumberToName
  *
  * \author Leonard Apanasevich
  *
@@ -27,7 +27,7 @@ using namespace std;
 class BitNumbertoName : public edm::EDAnalyzer {
 public:
   BitNumbertoName( const edm::ParameterSet & );
-
+  
 private:
   virtual void beginJob();
   virtual void beginRun(const edm::Run&, const edm::EventSetup&);
