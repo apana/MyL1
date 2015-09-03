@@ -500,7 +500,11 @@ void  BookHistograms(TFileDirectory dir){
 
   hname="hCenJet1_pt"; htitle="L1Extra1 p_{T} -- Central Jets";
   m_HistNames[hname]=Book1dHist(dir,hname, htitle, 64,0,254,false);
+  hname="hCenJet2_pt"; htitle="L1Extra2 p_{T} -- Central Jets";
+  m_HistNames[hname]=Book1dHist(dir,hname, htitle, 64,0,254,false);  
   hname="hForJet1_pt"; htitle="L1Extra1 p_{T} -- Forward Jets";
+  m_HistNames[hname]=Book1dHist(dir,hname, htitle, 64,0,254,false);
+  hname="hForJet2_pt"; htitle="L1Extra2 p_{T} -- Forward Jets";
   m_HistNames[hname]=Book1dHist(dir,hname, htitle, 64,0,254,false);
   
   hname="hIsolTau1_pt"; htitle="L1Extra1 p_{T} -- Isolated Tau Candidates";
