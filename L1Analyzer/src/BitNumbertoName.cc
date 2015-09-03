@@ -9,8 +9,9 @@ static const bool useL1GtTriggerMenuLite(false);
 
 // Get the algorithm of the jet collections we will read from the .cfg file
 // which defines the value of the strings CaloJetAlgorithm and GenJetAlgorithm.
-BitNumbertoName::BitNumbertoName( const ParameterSet & cfg ) :
-  m_l1GtUtils(cfg, consumesCollector(), useL1GtTriggerMenuLite, *this)
+//BitNumbertoName::BitNumbertoName( const ParameterSet & cfg ) :
+//  m_l1GtUtils(cfg, consumesCollector(), useL1GtTriggerMenuLite, *this)
+BitNumbertoName::BitNumbertoName( const ParameterSet & cfg )
 {
   cout << " Beginning Analysis " << endl;
   outFile        = cfg.getParameter<string>( "BitsAndPrescales" );

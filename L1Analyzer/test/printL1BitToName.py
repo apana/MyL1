@@ -1,15 +1,14 @@
 import FWCore.ParameterSet.Config as cms
 
-overRideL1=True  # override the L1 menu
-isMC = True
-GLOBALTAG = 'PRE_LS172_V11::All'
-
+overRideL1=False  # override the L1 menu
+isMC = False
+GLOBALTAG = "74X_dataRun2_HLT_v1"
 
 process = cms.Process("L1BitToName")
 
 ### Input source ###################################################
 
-inputfile="root://cms-xrd-global.cern.ch//store/relval/CMSSW_7_2_0_pre8/RelValTTbar_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU25ns_PRE_LS172_V15-v1/00000/128408A7-F74F-E411-99FB-002618943854.root"
+inputfile="/store/data/Run2015C/HLTPhysicspart0/RAW/v1/000/254/790/00000/FE944ECF-5148-E511-96F3-02163E012BBB.root"
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(inputfile)
 )
@@ -23,10 +22,12 @@ process.maxEvents = cms.untracked.PSet(
 process.load('Configuration/StandardSequences/Services_cff')
 process.load('Configuration/StandardSequences/GeometryIdeal_cff')
 process.load('Configuration/StandardSequences/MagneticField_38T_cff')
-process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
+## process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 
-process.GlobalTag.connect   = 'frontier://FrontierProd/CMS_COND_31X_GLOBALTAG'
-process.GlobalTag.pfnPrefix = cms.untracked.string('frontier://FrontierProd/')
+from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
+## process.GlobalTag.connect   = 'frontier://FrontierProd/CMS_COND_31X_GLOBALTAG'
+## process.GlobalTag.pfnPrefix = cms.untracked.string('frontier://FrontierProd/')
 process.GlobalTag.globaltag = GLOBALTAG
 
 if overRideL1:
