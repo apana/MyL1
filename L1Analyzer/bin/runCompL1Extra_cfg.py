@@ -9,8 +9,8 @@ from MyL1.L1Analyzer.files_r254790 import inputFiles
 
 # from Analysis.FWLite.files_r179828_ZeroBias_PFCorJets_v2 import inputFiles
 
-# myTrigger="Any"  # reference trigger
-myTrigger="HLT_Mu17_v2"  # reference trigger
+myTrigger="Any"  # reference trigger
+# myTrigger="HLT_Mu17_v2"  # reference trigger
 Prescl=1  # prescale factor of reference trigger
 
 # myTrigger="HLT_ZeroBias_part0_v1"  # reference trigger
@@ -19,8 +19,8 @@ Prescl=1  # prescale factor of reference trigger
 myOutputFile="Histograms_CompL1Extra_" + myTrigger + "_254790.root"
 # myOutputFile="Debug.root"
 
-nevts=-1
-# nevts=100000
+## nevts=-1
+nevts=100000
 process.fwliteInput = cms.PSet(
     fileNames   = cms.vstring(inputFiles), ## mandatory
     maxEvents   = cms.int32(nevts),           ## optional
