@@ -19,8 +19,8 @@ Prescl=1  # prescale factor of reference trigger
 myOutputFile="Histograms_CompL1Extra_" + myTrigger + "_254790.root"
 # myOutputFile="Debug.root"
 
-## nevts=-1
-nevts=100000
+nevts=-1
+## nevts=100000
 process.fwliteInput = cms.PSet(
     fileNames   = cms.vstring(inputFiles), ## mandatory
     maxEvents   = cms.int32(nevts),           ## optional
