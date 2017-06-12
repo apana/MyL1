@@ -22,4 +22,5 @@
 <use   name="CommonTools/UtilAlgos"/>
 <use   name="FWCore/ServiceRegistry"/>
 <use   name="L1Trigger/GlobalTriggerAnalyzer"/>
+<use   name="L1Trigger/L1TGlobal"/>
 <flags   EDM_PLUGIN="1"/>
