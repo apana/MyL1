@@ -3,25 +3,30 @@
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.StandardSequences.Eras import eras
-process = cms.Process('L1GTSUMMARY',eras.Run2_2017)
+process = cms.Process('COMPUGT',eras.Run2_2017)
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff')
-process.load('Configuration.StandardSequences.RawToDigi_Data_cff')
+## process.load('Configuration.StandardSequences.RawToDigi_Data_cff')
+process.load('L1Trigger.Configuration.L1TRawToDigi_cff')
 
 process.load('L1Trigger.L1TGlobal.GlobalParameters_cff')
 
-#process.load('L1Trigger/L1TGlobal/debug_messages_cfi')
-## process.MessageLogger.l1t_debug.l1t.limit = cms.untracked.int32(100000)
-#process.MessageLogger.categories.append('l1t|Global')
-#process.MessageLogger.debugModules = cms.untracked.vstring('*')
-#process.MessageLogger.cerr.threshold = cms.untracked.string('DEBUG')
+## process.load('L1Trigger/L1TGlobal/debug_messages_cfi')
+## # process.MessageLogger.l1t_debug.l1t.limit = cms.untracked.int32(100000)
+## process.MessageLogger.categories.append('l1t|Global')
+## process.MessageLogger.categories.append('L1TGlobal')
+## process.MessageLogger.debugModules = cms.untracked.vstring('*')
+## process.MessageLogger.cerr.threshold = cms.untracked.string('DEBUG')
+## process.MessageLogger.cerr.default.limit = cms.untracked.int32(0)
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
+
+
 process.maxEvents = cms.untracked.PSet(
-    ##input = cms.untracked.int32(100000)
+    ## input = cms.untracked.int32(2)
     input = cms.untracked.int32(-100)
     )
 
@@ -29,21 +34,17 @@ process.maxEvents = cms.untracked.PSet(
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
     fileNames = cms.untracked.vstring(
-        ## Run 304740 HLTPhysics
-        "/store/data/Run2017E/HLTPhysics/RAW/v1/000/304/740/00000/70F72DF2-A9AD-E711-B2BE-02163E01A5B4.root",
-        "/store/data/Run2017E/HLTPhysics/RAW/v1/000/304/740/00000/7E100DAC-A3AD-E711-8E56-02163E012B53.root",
-        "/store/data/Run2017E/HLTPhysics/RAW/v1/000/304/740/00000/B6E4EF43-A4AD-E711-8420-02163E0143B2.root",
-        "/store/data/Run2017E/HLTPhysics/RAW/v1/000/304/740/00000/4A1E3666-AAAD-E711-8415-02163E01A3EA.root",
-        "/store/data/Run2017E/HLTPhysics/RAW/v1/000/304/740/00000/464566F5-A9AD-E711-9F4B-02163E019CA7.root",
-        "/store/data/Run2017E/HLTPhysics/RAW/v1/000/304/740/00000/7C6B80F2-A9AD-E711-8134-02163E01A1F6.root",
-        "/store/data/Run2017E/HLTPhysics/RAW/v1/000/304/740/00000/F66987D8-A3AD-E711-AE06-02163E0142BD.root"
+        "root://cmseos.fnal.gov//store/user/lpctrig/apana/uGT/Validation/run304777_ErrorStream_RAW.root",
+        "root://cmseos.fnal.gov//store/user/lpctrig/apana/uGT/Validation/run304776_ErrorStream_RAW.root"
+        ## "/store/data/Run2017E/ZeroBias/RAW/v1/000/304/740/00000/5E28E7A0-9BAD-E711-98FF-02163E019B69.root"
 	),
-    skipEvents = cms.untracked.uint32(0)
+    skipEvents = cms.untracked.uint32(78)
     )
 
 # use TFileService for output histograms
 process.TFileService = cms.Service("TFileService",
-                              fileName = cms.string("comp_ugt_304740_HLTPhysics.root")
+                              fileName = cms.string("comp_ugt.root")
+                              ##      fileName = cms.string("comp_ugt_run304777_ErrorStream.root")
                               )
 
 process.output =cms.OutputModule("PoolOutputModule",
@@ -105,10 +106,18 @@ process.simGtStage2Digis.EmulateBxInEvent = cms.int32(1)
 ## process.simGtStage2Digis.ExtInputTag = cms.InputTag("simGtExtFakeProd")
 process.simGtStage2Digis.ExtInputTag = cms.InputTag("gtStage2Digis")
 process.simGtStage2Digis.MuonInputTag = cms.InputTag("gmtStage2Digis","Muon")
+## process.simGtStage2Digis.MuonInputTag = cms.InputTag("gtStage2Digis","Muon")
+
 process.simGtStage2Digis.EGammaInputTag = cms.InputTag("caloStage2Digis","EGamma")
 process.simGtStage2Digis.TauInputTag = cms.InputTag("caloStage2Digis","Tau")
 process.simGtStage2Digis.JetInputTag = cms.InputTag("caloStage2Digis","Jet")
 process.simGtStage2Digis.EtSumInputTag = cms.InputTag("caloStage2Digis","EtSum")
+
+## process.simGtStage2Digis.EGammaInputTag = cms.InputTag("gtStage2Digis","EGamma")
+## process.simGtStage2Digis.TauInputTag = cms.InputTag("gtStage2Digis","Tau")
+## process.simGtStage2Digis.JetInputTag = cms.InputTag("gtStage2Digis","Jet")
+## process.simGtStage2Digis.EtSumInputTag = cms.InputTag("gtStage2Digis","EtSum")
+
 
 ## gtInputTag="hltGtStage2Digis" ## for l1Accept events
 ## gtInputTag="gtStage2Digis" ## for RAW events
@@ -138,7 +147,9 @@ process.compugt = cms.EDAnalyzer("l1t::CompUGT",
 ################################################################################
 
 
-process.raw2digi_step = cms.Path(process.RawToDigi)
+## process.raw2digi_step = cms.Path(process.RawToDigi)
+process.raw2digi_step = cms.Path(process.L1TRawToDigi_Stage2)
+
 process.gtEmul = cms.Path(process.simGtExtFakeProd
                           *process.simGtStage2Digis)
 process.p = cms.Path(process.compugt)
