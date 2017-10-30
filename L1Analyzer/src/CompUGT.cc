@@ -129,7 +129,7 @@ namespace l1t {
       m_HistNames[hname]->Sumw2();
 
       hname="TriggerDecisions1"; htitle="Trigger Decisions -- uGT collection 1";
-      m_HistNames[hname] =fs->make<TH1F>(hname,htitle,512,0.,512);
+      m_HistNames[hname] =fs->make<TH1F>(hname,htitle,512,-0.5,511.5);
       //m_HistNames[hname]->Sumw2();
 
       hname="TriggerDecisions2"; htitle="Trigger Decisions -- uGT collection 2";
@@ -222,11 +222,11 @@ namespace l1t {
 
        if (resultInit1) {
 	 fillHist("TriggerDecisions1",float(i));
-	 if ( not resultInit2 ) fillHist("TriggerMismatchs1",float(i));
+	 if ( not resultInit2 ) fillHist("TriggerMismatches1",float(i));
        }
        if (resultInit2) {
 	 fillHist("TriggerDecisions2",float(i));
-	 if ( not resultInit1 ) fillHist("TriggerMismatchs2",float(i));
+	 if ( not resultInit1 ) fillHist("TriggerMismatches2",float(i));
        }
 
        if (//name1.find("BPTX")                    == std::string::npos &&
